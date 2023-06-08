@@ -55,6 +55,23 @@ function renderTodos() {
 
         todoContainer.appendChild(completeButton);
 
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+        removeButton.addEventListener("click", () => {
+          removeTodo(i.id);
+        });
+        todoContainer.appendChild(removeButton);
+
+        removeButton.classList.add(
+          "px-6",
+          "ml-3",
+          "bg-gray-600",
+          "py-1",
+          "my-2",
+          "text-white",
+          "rounded-xl"
+        );
+
         listItem.appendChild(todoContainer);
 
         todosList.appendChild(listItem);
@@ -71,6 +88,19 @@ function updateTodo(todoId, updatedTodo) {
     .update(updatedTodo)
     .then(() => {
       console.log("Todo updated successfully");
+      renderTodos();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+function removeTodo(todoId) {
+  db.collection("todos")
+    .doc(todoId)
+    .delete()
+    .then(() => {
+      console.log("removed");
       renderTodos();
     })
     .catch((error) => {
