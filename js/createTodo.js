@@ -2,22 +2,30 @@ import { renderTodos } from "./displayTodos.js";
 
 const db = firebase.firestore();
 const addButton = document.querySelector("#addTaskButton");
+const title = document.querySelector("input#title");
+const desc = document.querySelector("textarea#desc");
+const date = document.querySelector("input#endDate");
+randomTodo()
 addButton.addEventListener("click", (e) => {
   e.preventDefault();
-  const title = document.querySelector("input#title").value;
-  const desc = document.querySelector("textarea#desc").value;
-  const date = document.querySelector("input#endDate").value;
-
   const todo = {
-    title: title,
-    description: desc,
-    eddate: date
+    title: title.value,
+    description: desc.value,
+    eddate: date.value,
+    completed: false
   }
   createTodo(todo)
   renderTodos();
 })
 
-
+function randomTodo() {
+  fetch("https://dummyjson.com/todos/random")
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      title.setAttribute("placeholder", data.todo)
+    })
+}
 
 function createTodo(todo) {
   return db
