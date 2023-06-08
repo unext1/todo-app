@@ -27,7 +27,7 @@ export function renderTodos() {
         todoContainer.appendChild(descriptionElement);
 
         const endDateElement = document.createElement("p");
-        endDateElement.textContent = "End Date: " + todo.endDate;
+        endDateElement.textContent = "End Date: " + todo.enddate;
         todoContainer.appendChild(endDateElement);
 
         const completedElement = document.createElement("p");
