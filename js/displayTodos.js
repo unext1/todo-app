@@ -1,6 +1,6 @@
 const db = firebase.firestore();
 
-function renderTodos() {
+export function renderTodos() {
   const todosList = document.getElementById("todosList");
 
   todosList.innerHTML = "";

@@ -6,15 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todo App</title>
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/index.js" type="module" defer></script>
     <script src="js/displayTodos.js" type="module" defer></script>
     <script src="js/createTodo.js" type="module" defer></script>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body class="container max-w-7xl mx-auto">
     <h1 class="text-4xl mb-5 font-bold">Todo List</h1>
+    <form
+      class="flex border-solid border-2 border-sky-400 gap-6 flex-col w-1/2 mx-auto my-16"
+      id="createTask"
+    >
+      <label for="title">Titel</label>
+      <input required class="bg-gray-50 h-6" id="title" name="title" type="text" />
+      <label for="endDate">Slutdatum</label>
+      <input required class="w-1/3 h-6" type="datetime-local" name="endDate" id="endDate" />
+      <label for="desc">Beskrivning</label>
+      <textarea
+        placeholder="..."
+        name="desc"
+        id="desc"
+        cols="10"
+        rows="4"
+      ></textarea>
+      <button id="addTaskButton" type="submit">Lägg till</button>
+    </form>
+
     <div>
       <ul id="todosList"></ul>
     </div>

@@ -1,4 +1,23 @@
+import { renderTodos } from "./displayTodos.js";
+
 const db = firebase.firestore();
+const addButton = document.querySelector("#addTaskButton");
+addButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  const title = document.querySelector("input#title").value;
+  const desc = document.querySelector("textarea#desc").value;
+  const date = document.querySelector("input#endDate").value;
+
+  const todo = {
+    title: title,
+    description: desc,
+    eddate: date
+  }
+  createTodo(todo)
+  renderTodos();
+})
+
+
 
 function createTodo(todo) {
   return db
