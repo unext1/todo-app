@@ -1,3 +1,5 @@
+import { editTodo, removeTodo } from "./editTodo.js";
+
 const db = firebase.firestore();
 
 export function renderTodos() {
@@ -17,23 +19,7 @@ export function renderTodos() {
 
         const todoContainer = document.createElement("div");
 
-        const endDate = new Date(todo.enddate);
-        const today = new Date();
-        console.log(endDate > today);
-        const timeDifference = endDate.getTime() - Date.now();
-        const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
-
-        todoContainer.classList.add(
-          "p-4",
-          "mt-2",
-          "mb-5",
-          daysRemaining <= 3 && daysRemaining > 0 && todo.completed === false
-            ? "bg-orange-50"
-            : "bg-gray-50",
-          daysRemaining <= 0 && todo.completed === false
-            ? "bg-red-50"
-            : "bg-gray-50"
-        );
+        todoContainer.classList.add("p-4", "mt-2", "mb-5", "bg-gray-50");
 
         const titleElement = document.createElement("h3");
         titleElement.textContent = todo.title;
@@ -45,8 +31,7 @@ export function renderTodos() {
         todoContainer.appendChild(descriptionElement);
 
         const endDateElement = document.createElement("p");
-        endDateElement.textContent =
-          "End Date: " + new Date(todo.enddate).toLocaleString();
+        endDateElement.textContent = "End Date: " + todo.enddate;
         todoContainer.appendChild(endDateElement);
 
         const completedElement = document.createElement("p");
@@ -60,7 +45,7 @@ export function renderTodos() {
             ...todo,
             completed: !todo.completed,
           };
-          updateTodo(i.id, updatedTodo);
+          editTodo(i.id, updatedTodo);
         });
 
         completeButton.classList.add(
@@ -73,6 +58,35 @@ export function renderTodos() {
         );
 
         todoContainer.appendChild(completeButton);
+
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.addEventListener("click", () => {
+          const updatedTitle = prompt("Enter the new title:");
+          const updatedDescription = prompt("Enter the new description:");
+          const updatedEndDate = prompt("Enter the new end date:");
+
+          const updatedTodo = {
+            title: updatedTitle,
+            description: updatedDescription,
+            enddate: updatedEndDate,
+            completed: todo.completed,
+          };
+
+          editTodo(i.id, updatedTodo);
+        });
+
+        editButton.classList.add(
+          "px-6",
+          "ml-3",
+          "bg-gray-600",
+          "py-1",
+          "my-2",
+          "text-white",
+          "rounded-xl"
+        );
+
+        todoContainer.appendChild(editButton);
 
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
@@ -92,11 +106,6 @@ export function renderTodos() {
         );
 
         listItem.appendChild(todoContainer);
-        if (!todo.completed) {
-          todosList.appendChild(listItem);
-        } else {
-          doneList.appendChild(listItem);
-        }
 
         if (todo.completed) {
           completedTodosList.appendChild(listItem);
@@ -104,32 +113,6 @@ export function renderTodos() {
           todosList.appendChild(listItem);
         }
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
-function updateTodo(todoId, updatedTodo) {
-  db.collection("todos")
-    .doc(todoId)
-    .update(updatedTodo)
-    .then(() => {
-      console.log("Todo updated successfully");
-      renderTodos();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
-function removeTodo(todoId) {
-  db.collection("todos")
-    .doc(todoId)
-    .delete()
-    .then(() => {
-      console.log("removed");
-      renderTodos();
     })
     .catch((error) => {
       console.log(error);
