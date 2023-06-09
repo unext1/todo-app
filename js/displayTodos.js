@@ -2,7 +2,7 @@ const db = firebase.firestore();
 
 export function renderTodos() {
   const todosList = document.getElementById("todosList");
-
+  const doneList = document.querySelector("#doneList");
   todosList.innerHTML = "";
 
   db.collection("todos")
@@ -73,8 +73,12 @@ export function renderTodos() {
         );
 
         listItem.appendChild(todoContainer);
+        if (!todo.completed) {
+          todosList.appendChild(listItem);
+        } else {
+          doneList.appendChild(listItem);
+        }
 
-        todosList.appendChild(listItem);
       });
     })
     .catch((error) => {
