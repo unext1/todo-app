@@ -15,11 +15,29 @@ export function renderTodos() {
       data.forEach((i) => {
         const todo = i.data();
 
+        console.log(todo.enddate);
         const listItem = document.createElement("li");
 
         const todoContainer = document.createElement("div");
 
         todoContainer.classList.add("p-4", "mt-2", "mb-5", "bg-gray-50");
+        const endDate = new Date(todo.enddate);
+        const today = new Date();
+        console.log(endDate > today);
+        const timeDifference = endDate.getTime() - Date.now();
+        const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+        todoContainer.classList.add(
+          "p-4",
+          "mt-2",
+          "mb-5",
+          daysRemaining <= 3 && daysRemaining > 0 && todo.completed === false
+            ? "bg-orange-50"
+            : "bg-gray-50",
+          daysRemaining <= 0 && todo.completed === false
+            ? "bg-red-50"
+            : "bg-gray-50"
+        );
 
         const titleElement = document.createElement("h3");
         titleElement.textContent = todo.title;
@@ -31,7 +49,8 @@ export function renderTodos() {
         todoContainer.appendChild(descriptionElement);
 
         const endDateElement = document.createElement("p");
-        endDateElement.textContent = "End Date: " + todo.enddate;
+        endDateElement.textContent =
+          "End Date: " + new Date(todo.enddate).toLocaleString();
         todoContainer.appendChild(endDateElement);
 
         const completedElement = document.createElement("p");
@@ -64,12 +83,16 @@ export function renderTodos() {
         editButton.addEventListener("click", () => {
           const updatedTitle = prompt("Enter the new title:");
           const updatedDescription = prompt("Enter the new description:");
-          const updatedEndDate = prompt("Enter the new end date:");
+          const updatedEndDate = prompt(
+            "Enter the new end date in (YYYY-MM-DDTHH:mm) format : (example: 2023-06-11T10:44)"
+          );
 
           const updatedTodo = {
-            title: updatedTitle,
-            description: updatedDescription,
-            enddate: updatedEndDate,
+            title: updatedTitle ? updatedTitle : todo.title,
+            description: updatedDescription
+              ? updatedDescription
+              : todo.description,
+            enddate: updatedEndDate ? updatedEndDate : todo.endDate,
             completed: todo.completed,
           };
 
