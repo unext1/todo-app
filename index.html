@@ -14,9 +14,11 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body class="container max-w-7xl mx-auto px-4">
-    <h1 class="text-4xl mb-5 font-bold mt-10">Todo List</h1>
+    <h1 class="text-4xl mb-5 font-bold mt-10">Todo App</h1>
     <div class="grid md:grid-cols-2 grid-cols-1 gap-10">
-      <form class="flex gap-3 flex-col my-16" id="createTask">
+      <form class="flex gap-3 flex-col py-5" id="createTask">
+        <h2 class="text-lg font-semibold mb-2">Create a task</h2>
+
         <div>
           <label
             for="Titel"
@@ -79,14 +81,14 @@
           Lägg till
         </button>
       </form>
-      <div class="w-full h-full p-5">
-        <h2 class="text-lg font-semibold">Completed Todo's</h2>
-        <ul id="completedTodos"></ul>
+      <div class="w-full h-full py-5">
+        <h2 class="text-lg font-semibold mb-2">Completed Todo's</h2>
+        <ul id="completedTodos" class="overflow-y-scroll h-96"></ul>
       </div>
     </div>
 
-    <div>
-      <h2 class="text-lg font-semibold">Uncompleted Todo's</h2>
+    <div class="py-5">
+      <h2 class="text-lg font-semibold mb-2">Uncompleted Todo's</h2>
 
       <ul id="todosList"></ul>
       <hr />
