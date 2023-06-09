@@ -92,6 +92,11 @@ export function renderTodos() {
         );
 
         listItem.appendChild(todoContainer);
+        if (!todo.completed) {
+          todosList.appendChild(listItem);
+        } else {
+          doneList.appendChild(listItem);
+        }
 
         if (todo.completed) {
           completedTodosList.appendChild(listItem);
