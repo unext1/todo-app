@@ -1,3 +1,5 @@
+import { editTodo, removeTodo } from "./editTodo.js";
+
 const db = firebase.firestore();
 
 export function renderTodos() {
@@ -14,10 +16,12 @@ export function renderTodos() {
       data.forEach((i) => {
         const todo = i.data();
 
+        console.log(todo.enddate);
         const listItem = document.createElement("li");
 
         const todoContainer = document.createElement("div");
 
+        todoContainer.classList.add("p-4", "mt-2", "mb-5", "bg-gray-50");
         const endDate = new Date(todo.enddate);
         const today = new Date();
         console.log(endDate > today);
@@ -61,7 +65,7 @@ export function renderTodos() {
             ...todo,
             completed: !todo.completed,
           };
-          updateTodo(i.id, updatedTodo);
+          editTodo(i.id, updatedTodo);
         });
 
         completeButton.classList.add(
@@ -74,6 +78,39 @@ export function renderTodos() {
         );
 
         todoContainer.appendChild(completeButton);
+
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.addEventListener("click", () => {
+          const updatedTitle = prompt("Enter the new title:");
+          const updatedDescription = prompt("Enter the new description:");
+          const updatedEndDate = prompt(
+            "Enter the new end date in (YYYY-MM-DDTHH:mm) format : (example: 2023-06-11T10:44)"
+          );
+
+          const updatedTodo = {
+            title: updatedTitle ? updatedTitle : todo.title,
+            description: updatedDescription
+              ? updatedDescription
+              : todo.description,
+            enddate: updatedEndDate ? updatedEndDate : todo.endDate,
+            completed: todo.completed,
+          };
+
+          editTodo(i.id, updatedTodo);
+        });
+
+        editButton.classList.add(
+          "px-6",
+          "ml-3",
+          "bg-gray-600",
+          "py-1",
+          "my-2",
+          "text-white",
+          "rounded-xl"
+        );
+
+        todoContainer.appendChild(editButton);
 
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
@@ -93,11 +130,6 @@ export function renderTodos() {
         );
 
         listItem.appendChild(todoContainer);
-        if (!todo.completed) {
-          todosList.appendChild(listItem);
-        } else {
-          doneList.appendChild(listItem);
-        }
 
         if (todo.completed) {
           completedTodosList.appendChild(listItem);
