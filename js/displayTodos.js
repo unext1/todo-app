@@ -1,4 +1,4 @@
-import { editTodo, removeTodo } from "./editTodo.js";
+import { editTodo } from "./editTodo.js";
 
 const db = firebase.firestore();
 
@@ -143,18 +143,18 @@ export function renderTodos() {
     });
 }
 
-function updateTodo(todoId, updatedTodo) {
-  db.collection("todos")
-    .doc(todoId)
-    .update(updatedTodo)
-    .then(() => {
-      console.log("Todo updated successfully");
-      renderTodos();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
+// function updateTodo(todoId, updatedTodo) {
+//   db.collection("todos")
+//     .doc(todoId)
+//     .update(updatedTodo)
+//     .then(() => {
+//       console.log("Todo updated successfully");
+//       renderTodos();
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// }
 
 function removeTodo(todoId) {
   db.collection("todos")
@@ -169,21 +169,4 @@ function removeTodo(todoId) {
     });
 }
 
-function sortTodosByDeadline() {
-  const todosList = document.getElementById("todosList");
-
-  const sortedTodos = Array.from(todosList.children)
-    .map(todo => {
-      const endDateText = todo.querySelector("p:nth-child(3)").textContent;
-      const endDate = new Date(endDateText.split(": ")[1]);
-      return { todo, endDate };
-    })
-    .sort((a, b) => a.endDate - b.endDate);
-
-  todosList.innerHTML = "";
-  sortedTodos.forEach(item => todosList.appendChild(item.todo));
-}
-
 renderTodos();
-sortTodosByDeadline();
-
