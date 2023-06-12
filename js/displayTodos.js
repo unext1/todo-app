@@ -8,6 +8,7 @@ export function renderTodos() {
   completedTodosList.innerHTML = "";
 
   db.collection("todos")
+    .orderBy("enddate", "asc")
     .get()
     .then((data) => {
       data.forEach((i) => {
@@ -136,4 +137,21 @@ function removeTodo(todoId) {
     });
 }
 
+function sortTodosByDeadline() {
+  const todosList = document.getElementById("todosList");
+
+  const sortedTodos = Array.from(todosList.children)
+    .map(todo => {
+      const endDateText = todo.querySelector("p:nth-child(3)").textContent;
+      const endDate = new Date(endDateText.split(": ")[1]);
+      return { todo, endDate };
+    })
+    .sort((a, b) => a.endDate - b.endDate);
+
+  todosList.innerHTML = "";
+  sortedTodos.forEach(item => todosList.appendChild(item.todo));
+}
+
 renderTodos();
+sortTodosByDeadline();
+
