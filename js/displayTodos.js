@@ -1,4 +1,4 @@
-import { editTodo, removeTodo } from "./editTodo.js";
+import { editTodo } from "./editTodo.js";
 
 const db = firebase.firestore();
 
@@ -10,16 +10,35 @@ export function renderTodos() {
   completedTodosList.innerHTML = "";
 
   db.collection("todos")
+    .orderBy("enddate", "asc")
     .get()
     .then((data) => {
       data.forEach((i) => {
         const todo = i.data();
 
+        console.log(todo.enddate);
         const listItem = document.createElement("li");
 
         const todoContainer = document.createElement("div");
 
         todoContainer.classList.add("p-4", "mt-2", "mb-5", "bg-gray-50");
+        const endDate = new Date(todo.enddate);
+        const today = new Date();
+        console.log(endDate > today);
+        const timeDifference = endDate.getTime() - Date.now();
+        const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+        todoContainer.classList.add(
+          "p-4",
+          "mt-2",
+          "mb-5",
+          daysRemaining <= 3 && daysRemaining > 0 && todo.completed === false
+            ? "bg-orange-50"
+            : "bg-gray-50",
+          daysRemaining <= 0 && todo.completed === false
+            ? "bg-red-50"
+            : "bg-gray-50"
+        );
 
         const titleElement = document.createElement("h3");
         titleElement.textContent = todo.title;
@@ -31,7 +50,8 @@ export function renderTodos() {
         todoContainer.appendChild(descriptionElement);
 
         const endDateElement = document.createElement("p");
-        endDateElement.textContent = "End Date: " + todo.enddate;
+        endDateElement.textContent =
+          "End Date: " + new Date(todo.enddate).toLocaleString();
         todoContainer.appendChild(endDateElement);
 
         const completedElement = document.createElement("p");
@@ -62,18 +82,51 @@ export function renderTodos() {
         const editButton = document.createElement("button");
         editButton.textContent = "Edit";
         editButton.addEventListener("click", () => {
-          const updatedTitle = prompt("Enter the new title:");
-          const updatedDescription = prompt("Enter the new description:");
-          const updatedEndDate = prompt("Enter the new end date:");
+          const editPopup = document.createElement("div");
+          editPopup.classList.add("edit-popup");
 
-          const updatedTodo = {
-            title: updatedTitle,
-            description: updatedDescription,
-            enddate: updatedEndDate,
-            completed: todo.completed,
-          };
+          const titleInput = document.createElement("input");
+          titleInput.type = "text";
+          titleInput.value = todo.title;
 
-          editTodo(i.id, updatedTodo);
+          const descriptionInput = document.createElement("input");
+          descriptionInput.type = "text";
+          descriptionInput.value = todo.description;
+
+          const endDateInput = document.createElement("input");
+          endDateInput.type = "datetime-local";
+          endDateInput.value = todo.enddate;
+
+          const currentYear = new Date().getFullYear();
+          endDateInput.max = `${currentYear + 1}-12-31T23:59`;
+
+          const updateButton = document.createElement("button");
+          updateButton.textContent = "Update";
+          updateButton.addEventListener("click", () => {
+            const updatedTodo = {
+              title: titleInput.value,
+              description: descriptionInput.value,
+              enddate: endDateInput.value,
+              completed: todo.completed,
+            };
+
+            editTodo(i.id, updatedTodo);
+            editPopup.remove();
+          });
+
+          const cancelButton = document.createElement("button");
+          cancelButton.textContent = "Cancel";
+          cancelButton.addEventListener("click", () => {
+            editPopup.remove();
+          });
+
+          editPopup.appendChild(titleInput);
+          editPopup.appendChild(descriptionInput);
+          editPopup.appendChild(endDateInput);
+          editPopup.appendChild(updateButton);
+          editPopup.appendChild(cancelButton);
+
+          document.body.appendChild(editPopup);
         });
 
         editButton.classList.add(
@@ -113,6 +166,19 @@ export function renderTodos() {
           todosList.appendChild(listItem);
         }
       });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+function removeTodo(todoId) {
+  db.collection("todos")
+    .doc(todoId)
+    .delete()
+    .then(() => {
+      console.log("removed");
+      renderTodos();
     })
     .catch((error) => {
       console.log(error);
