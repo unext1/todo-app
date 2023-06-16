@@ -9,6 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/index.js" type="module" defer></script>
+
     <script src="js/displayTodos.js" type="module" defer></script>
     <script src="js/createTodo.js" type="module" defer></script>
     <link rel="stylesheet" href="style.css" />
@@ -24,7 +25,7 @@
             for="Titel"
             class="block text-sm font-medium leading-6 text-gray-900 uppercase"
           >
-            Titel
+            Title
           </label>
           <div class="mt-2">
             <input
@@ -42,7 +43,7 @@
             for="endDate"
             class="block text-sm font-medium leading-6 text-gray-900 uppercase"
           >
-            Slutdatum
+            Due date
           </label>
           <div class="mt-2">
             <input
@@ -60,7 +61,7 @@
             for="desc"
             class="block text-sm font-medium leading-6 text-gray-900 uppercase"
           >
-            Beskrivning
+            Description
           </label>
           <div class="mt-2">
             <textarea
@@ -78,7 +79,7 @@
           type="submit"
           class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
         >
-          Lägg till
+          Add task
         </button>
       </form>
       <div class="w-full h-full py-5">
@@ -91,8 +92,7 @@
       <h2 class="text-lg font-semibold mb-2">Uncompleted Todo's</h2>
 
       <ul id="todosList"></ul>
-      <hr />
-      <ul id="doneList"></ul>
     </div>
+    <ul id="todosList" class="overflow-y-scroll h-96"></ul>
   </body>
 </html>

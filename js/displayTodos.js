@@ -172,6 +172,19 @@ export function renderTodos() {
     });
 }
 
+// function updateTodo(todoId, updatedTodo) {
+//   db.collection("todos")
+//     .doc(todoId)
+//     .update(updatedTodo)
+//     .then(() => {
+//       console.log("Todo updated successfully");
+//       renderTodos();
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// }
+
 function removeTodo(todoId) {
   db.collection("todos")
     .doc(todoId)
